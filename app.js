@@ -142,6 +142,10 @@ slider.addEventListener("input", () => {
   updateLeanUI();
 });
 
+// 모바일: 슬라이더 조작 중 화면이 함께 스크롤되지 않도록 차단
+slider.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+slider.parentElement.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+
 // 카드를 누르면 그쪽으로 크게 기울기
 cardA.addEventListener("click", () => { slider.value = 90; answers[current] = 90; updateLeanUI(); });
 cardB.addEventListener("click", () => { slider.value = 10; answers[current] = 10; updateLeanUI(); });
