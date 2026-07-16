@@ -45,10 +45,12 @@
 
         <div class="slider-zone">
           <span class="slider-hint top-hint">▲ 이쪽에 가깝다</span>
-          <div class="slider-wrap">
+          <div class="slider-wrap" id="slider-wrap" role="slider" tabindex="0"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+               aria-label="A와 B 사이에서 나의 위치">
             <div class="slider-track-deco"></div>
             <div class="center-tick"></div>
-            <input type="range" id="slider" min="0" max="100" value="50" step="1" aria-label="A와 B 사이에서 나의 위치">
+            <div class="slider-thumb" id="slider-thumb"></div>
           </div>
           <span class="slider-hint bottom-hint">▼ 이쪽에 가깝다</span>
           <div id="lean-indicator" class="lean-indicator">중간</div>

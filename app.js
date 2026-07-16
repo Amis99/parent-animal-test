@@ -21,10 +21,48 @@ let current = 0;
 /* ---------- DOM ---------- */
 const $ = (id) => document.getElementById(id);
 const screens = { intro: $("intro"), quiz: $("quiz"), result: $("result") };
-const slider = $("slider");
+const sliderWrap = $("slider-wrap");
+const sliderThumb = $("slider-thumb");
 const cardA = $("card-a");
 const cardB = $("card-b");
 const leanIndicator = $("lean-indicator");
+
+/* ---------- 커스텀 세로 슬라이더 (포인터 이벤트 기반) ---------- */
+const THUMB_PAD = 15; // 썸 반지름만큼 트랙 양끝 여백
+let sliderValue = 50;
+
+function setSliderValue(v) {
+  sliderValue = Math.max(0, Math.min(100, Math.round(v)));
+  const h = sliderWrap.clientHeight;
+  const y = THUMB_PAD + (1 - sliderValue / 100) * (h - THUMB_PAD * 2);
+  sliderThumb.style.top = `${y}px`;
+  sliderWrap.setAttribute("aria-valuenow", sliderValue);
+  answers[current] = sliderValue;
+  updateLeanUI();
+}
+
+function sliderValueFromPointer(e) {
+  const rect = sliderWrap.getBoundingClientRect();
+  const ratio = 1 - (e.clientY - rect.top - THUMB_PAD) / (rect.height - THUMB_PAD * 2);
+  return ratio * 100;
+}
+
+let dragging = false;
+sliderWrap.addEventListener("pointerdown", (e) => {
+  dragging = true;
+  sliderWrap.setPointerCapture(e.pointerId);
+  setSliderValue(sliderValueFromPointer(e));
+  e.preventDefault();
+});
+sliderWrap.addEventListener("pointermove", (e) => {
+  if (dragging) setSliderValue(sliderValueFromPointer(e));
+});
+sliderWrap.addEventListener("pointerup", () => { dragging = false; });
+sliderWrap.addEventListener("pointercancel", () => { dragging = false; });
+sliderWrap.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") { setSliderValue(sliderValue + 5); e.preventDefault(); }
+  if (e.key === "ArrowDown") { setSliderValue(sliderValue - 5); e.preventDefault(); }
+});
 
 function showScreen(name) {
   Object.values(screens).forEach((s) => s.classList.remove("active"));
@@ -40,14 +78,13 @@ function renderQuestion() {
   $("q-situation").textContent = `Q${current + 1}. ${q.s}`;
   $("q-option-a").textContent = q.a;
   $("q-option-b").textContent = q.b;
-  slider.value = answers[current];
+  setSliderValue(answers[current]);
   $("prev-btn").style.visibility = current === 0 ? "hidden" : "visible";
   $("next-btn").textContent = current === NUM_Q - 1 ? "결과 보기 🎉" : "다음 →";
-  updateLeanUI();
 }
 
 function updateLeanUI() {
-  const v = Number(slider.value);
+  const v = sliderValue;
   cardA.classList.toggle("leaning", v > 55);
   cardB.classList.toggle("leaning", v < 45);
   if (v > 55) {
@@ -133,22 +170,13 @@ function renderResult() {
 $("start-btn").addEventListener("click", () => {
   current = 0;
   answers.fill(50);
+  showScreen("quiz"); // 화면을 먼저 보여야 슬라이더 높이 계산이 정확함
   renderQuestion();
-  showScreen("quiz");
 });
-
-slider.addEventListener("input", () => {
-  answers[current] = Number(slider.value);
-  updateLeanUI();
-});
-
-// 모바일: 슬라이더 조작 중 화면이 함께 스크롤되지 않도록 차단
-slider.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
-slider.parentElement.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
 
 // 카드를 누르면 그쪽으로 크게 기울기
-cardA.addEventListener("click", () => { slider.value = 90; answers[current] = 90; updateLeanUI(); });
-cardB.addEventListener("click", () => { slider.value = 10; answers[current] = 10; updateLeanUI(); });
+cardA.addEventListener("click", () => setSliderValue(90));
+cardB.addEventListener("click", () => setSliderValue(10));
 
 $("prev-btn").addEventListener("click", () => {
   if (current > 0) { current--; renderQuestion(); }
@@ -178,7 +206,13 @@ $("save-btn").addEventListener("click", async () => {
     const canvas = await html2canvas(screens.result, {
       backgroundColor: "#fdf8f2",
       scale: 2,
-      useCORS: true
+      useCORS: true,
+      onclone: (doc) => {
+        // 복제 문서에서 fade-in 애니메이션이 재시작되며 반투명하게 찍히는 것을 방지
+        const el = doc.getElementById("result");
+        el.style.animation = "none";
+        el.style.opacity = "1";
+      }
     });
     const link = document.createElement("a");
     link.download = `나의부모유형_${lastResult.animal.name.replace(/\s/g, "")}.png`;
