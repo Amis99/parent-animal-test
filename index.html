@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나는 어떤 부모인가? | 36가지 동물 부모 유형 테스트</title>
+  <meta name="description" content="20가지 상황 질문으로 알아보는 나의 부모 유형. 36가지 동물 중 나는 어떤 부모일까요?">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- 시작 화면 -->
+    <section id="intro" class="screen active">
+      <div class="intro-emojis">🦁 🐬 🦉 🐻 🦊 🐢</div>
+      <h1>나는 어떤 부모인가?</h1>
+      <p class="subtitle">36가지 동물로 알아보는 나의 양육 유형</p>
+      <p class="intro-desc">
+        일상 속 20가지 상황에서 나의 선택을 따라가다 보면,<br>
+        나도 몰랐던 나의 양육 스타일이 동물의 모습으로 나타납니다.<br><br>
+        정답은 없습니다. 평소의 나와 가장 가까운 쪽으로<br>
+        <strong>가운데 바를 위·아래로 움직여</strong> 답해주세요.
+      </p>
+      <button id="start-btn" class="primary-btn">테스트 시작하기</button>
+      <p class="intro-meta">소요 시간 약 5분 · 총 20문항</p>
+    </section>
+
+    <!-- 질문 화면 -->
+    <section id="quiz" class="screen">
+      <div class="progress-area">
+        <div class="progress-text"><span id="q-num">1</span> / 20</div>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+      </div>
+
+      <p id="q-situation" class="situation"></p>
+
+      <div class="choice-area">
+        <div id="card-a" class="choice-card top">
+          <span class="choice-label">A</span>
+          <p id="q-option-a"></p>
+        </div>
+
+        <div class="slider-zone">
+          <span class="slider-hint top-hint">▲ 이쪽에 가깝다</span>
+          <div class="slider-wrap">
+            <div class="slider-track-deco"></div>
+            <div class="center-tick"></div>
+            <input type="range" id="slider" min="0" max="100" value="50" step="1" aria-label="A와 B 사이에서 나의 위치">
+          </div>
+          <span class="slider-hint bottom-hint">▼ 이쪽에 가깝다</span>
+          <div id="lean-indicator" class="lean-indicator">중간</div>
+        </div>
+
+        <div id="card-b" class="choice-card bottom">
+          <span class="choice-label">B</span>
+          <p id="q-option-b"></p>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button id="prev-btn" class="ghost-btn">← 이전</button>
+        <button id="next-btn" class="primary-btn">다음 →</button>
+      </div>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="result" class="screen">
+      <p class="result-eyebrow">나의 부모 유형은</p>
+      <div id="result-emoji" class="result-emoji">🐬</div>
+      <h2 id="result-title" class="result-title"></h2>
+      <p id="result-name" class="result-name"></p>
+
+      <div class="axis-report">
+        <h3>나의 양육 성향 좌표</h3>
+        <div id="axis-bars"></div>
+      </div>
+
+      <div class="result-section">
+        <h3>💡 이런 부모예요</h3>
+        <p id="result-desc"></p>
+      </div>
+      <div class="result-section good">
+        <h3>👍 장점</h3>
+        <p id="result-pros"></p>
+      </div>
+      <div class="result-section bad">
+        <h3>⚠️ 단점</h3>
+        <p id="result-cons"></p>
+      </div>
+      <div class="result-section advice">
+        <h3>🌱 조언</h3>
+        <p id="result-advice"></p>
+      </div>
+
+      <div class="result-btns">
+        <button id="retry-btn" class="primary-btn">다시 해보기</button>
+        <button id="share-btn" class="ghost-btn">결과 복사하기</button>
+      </div>
+    </section>
+
+  </main>
+  <footer>© 나는 어떤 부모인가? · 36가지 동물 부모 유형 테스트</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
