@@ -165,6 +165,31 @@ $("retry-btn").addEventListener("click", () => {
   showScreen("intro");
 });
 
+$("save-btn").addEventListener("click", async () => {
+  if (!lastResult) return;
+  const btn = $("save-btn");
+  btn.disabled = true;
+  btn.textContent = "저장 중...";
+  try {
+    const canvas = await html2canvas(screens.result, {
+      backgroundColor: "#fdf8f2",
+      scale: 2,
+      useCORS: true
+    });
+    const link = document.createElement("a");
+    link.download = `나의부모유형_${lastResult.animal.name.replace(/\s/g, "")}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    btn.textContent = "저장 완료! ✓";
+  } catch (e) {
+    btn.textContent = "저장 실패 😢";
+  }
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = "📷 이미지로 저장";
+  }, 2000);
+});
+
 $("share-btn").addEventListener("click", async () => {
   if (!lastResult) return;
   const a = lastResult.animal;

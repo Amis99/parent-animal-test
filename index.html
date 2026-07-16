@@ -95,8 +95,9 @@
         <p id="result-advice"></p>
       </div>
 
-      <div class="result-btns">
-        <button id="retry-btn" class="primary-btn">다시 해보기</button>
+      <div class="result-btns" data-html2canvas-ignore="true">
+        <button id="save-btn" class="primary-btn">📷 이미지로 저장</button>
+        <button id="retry-btn" class="ghost-btn">다시 해보기</button>
         <button id="share-btn" class="ghost-btn">결과 복사하기</button>
       </div>
     </section>
@@ -104,6 +105,7 @@
   </main>
   <footer>© 나는 어떤 부모인가? · 36가지 동물 부모 유형 테스트</footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
